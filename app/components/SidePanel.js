@@ -15,7 +15,7 @@ const SideContainer = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  overflow-x: scroll;
   overflow-y: hidden;
 `
 function SidePanel(props) {
@@ -43,6 +43,7 @@ function SidePanel(props) {
         playerNames={props.playerNames}
       />
       <TeamSpecificActions 
+        data={props.spreadsheet}
         teamShort={props.teamShort}
         setEscCommand={props.setEscCommand}
         coach={props.coach}
@@ -56,7 +57,11 @@ function SidePanel(props) {
         setCoach={props.setCoach}
       />
       <TeamTimeout 
+        timeout={props.timeout}
+        setTimeout={props.setTimeout}
         currentQuarter={props.currentQuarter}
+        setEscCommand={props.setEscCommand}
+        teamTitle={props.teamTitle}
       />
     </SideContainer>
   );

@@ -9,7 +9,7 @@ import useSpreadsheet from './hooks/useSpreadsheet.js'
 import {SocketProvider, useSocket} from './hooks/useSocket.js'
 import tcpStringsList from './tcpStrings.js'
 
-import { LastRowContext, StartingPlayersContext, ConnectionContext, TeamName, LastGfxCommandContext } from './context.js'
+import { Language, LastRowContext, StartingPlayersContext, ConnectionContext, TeamName, LastGfxCommandContext } from './context.js'
 import * as net from 'net'
 
 // za desni klik, da onemogoc od chroma menije
@@ -53,9 +53,9 @@ const GlobalStyle = createGlobalStyle`
 const startingPlayersReducer = (state = [], action) => {
   switch(action.type) {
     case 'toggle': {
-      const player = state.find((p) => p == action.player)
+      const player = (state.find((p) => p.name == action.player.name) && state.find((p) => p.surname == action.player.surname))
       if (player) {
-        return state.filter((p)=> p != action.player)
+        return state.filter((p)=>  p.name != action.player.name &&  p.surname != action.player.surname)
       } else {
         return state.concat(action.player)
       }
@@ -92,7 +92,6 @@ function MainContainer() {
   const [teamTitleB, setTeamTitleB] = useState('TeamTitleB')
   const [teamShortA, setTeamShortA] = useState('XXX')
   const [teamShortB, setTeamShortB] = useState('XXX')
-  const [timeout, setTimeout] = useState({A: 0, B: 0})
   const [autocompletePath, setAutocompletePath] = useState('')
   const [autocompleteSheet, setAutocompleteSheet] = useState('')
 
@@ -104,6 +103,8 @@ function MainContainer() {
   const [quarterFouls, setQuarterFouls] = useState([{A:0,B:0},{A:0,B:0},{A:0,B:0},{A:0,B:0},{A:0,B:0}])
   const [byPoints, setByPoints] = useState([{A:0,B:0},{A:0,B:0},{A:0,B:0}])
   const [currentQuarter, setCurrentQuarter] = useState(0)
+  const [timeoutA, setTimeoutA] = useState([0, 0])
+  const [timeoutB, setTimeoutB] = useState([0, 0])
 
   const [playerArrayA, setPlayerArrayA] = useState([])
   const [playerArrayB, setPlayerArrayB] = useState([])
@@ -127,16 +128,20 @@ function MainContainer() {
   const [refereeCountry3, setRefereeCountry3] = useState('')
   const startingPlayersLeft = useReducer(startingPlayersReducer, [])
   const startingPlayersRight= useReducer(startingPlayersReducer, [])
+  const [language, setLanguage] = useState('eng')
 
   const [lastRow, setLastRow] = useState({row: 0, team: 'A'})
   return (
     <SocketProvider connection={connection}>
       <TeamName.Provider value={{A: teamTitleA, B: teamTitleB}}>
       <LastRowContext.Provider value={[lastRow, setLastRow]}>
+      <Language.Provider value={language}>
         <Main>
           <GlobalStyle />
             <StartingPlayersContext.Provider value={startingPlayersLeft}>
             <SidePanel 
+              timeout={timeoutA}
+              setTimeout={setTimeoutA}
               autocompletePath={autocompletePath}
               autocompleteSheet={autocompleteSheet}
               setEscCommand={setEscCommand}
@@ -159,6 +164,8 @@ function MainContainer() {
             />
           </StartingPlayersContext.Provider>
           <MiddlePanel
+            timeoutA={timeoutA}
+            timeoutB={timeoutB}
             autocompletePath={autocompletePath}
             autocompleteSheet={autocompleteSheet}
             setAutocompletePath={setAutocompletePath}
@@ -180,6 +187,7 @@ function MainContainer() {
             setIP={setIP}
             setEscCommand={setEscCommand}
             setPort={setPort}
+            setLanguage={setLanguage}
 
             score={score}
             teamShortA={teamShortA}
@@ -229,6 +237,8 @@ function MainContainer() {
           />
           <StartingPlayersContext.Provider value={startingPlayersRight}>
             <SidePanel 
+              timeout={timeoutB}
+              setTimeout={setTimeoutB}
               autocompletePath={autocompletePath}
               autocompleteSheet={autocompleteSheet}
               setEscCommand={setEscCommand}
@@ -251,6 +261,7 @@ function MainContainer() {
             />
           </StartingPlayersContext.Provider>
         </Main>
+      </Language.Provider>
       </LastRowContext.Provider>
       </TeamName.Provider>
     </SocketProvider>

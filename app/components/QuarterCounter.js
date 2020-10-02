@@ -5,6 +5,7 @@ import Slider from '@material-ui/core/Slider';
 import styled from 'styled-components'
 import ComButton from './ComButton.js'
 import tcpStrings from '../tcpStrings.js'
+import { Language } from '../context.js'
 
 const StyledQuarterCounter = styled.div`
   display: flex;
@@ -129,22 +130,25 @@ function FoulsByQuarter(props) {
 }
 
 function QuarterCounter(props) {
-  const selectIn = () => {
+  const selectIn = (language) => {
       switch(props.currentQuarter) {
         case 0:
-          return tcpStrings.quarter_1.in()
+          return tcpStrings.quarter_1.in( language == 'eng'? 'RESULTS BY QUARTER' : 'REZULTATI PO ČETRTINAH', language == 'eng'? 'Q1' : '1.')
         break;
         case 1:
-          return tcpStrings.quarter_2.in()
+          return tcpStrings.quarter_2.in(language == 'eng'? 'RESULTS BY QUARTER' : 'REZULTATI PO ČETRTINAH', 
+            [language == 'eng'? 'Q1' : '1.', language == 'eng'? 'Q2' : '2.'])
         break;
         case 2:
-          return tcpStrings.quarter_3.in()
+          return tcpStrings.quarter_3.in(language == 'eng'? 'RESULTS BY QUARTER' : 'REZULTATI PO ČETRTINAH', 
+            [language == 'eng'? 'Q1' : '1.', language == 'eng'? 'Q2' : '2.',language == 'eng'? 'Q3' : '3.'])
         break;
         case 3:
-          return tcpStrings.quarter_4.in()
+          return tcpStrings.quarter_4.in(language == 'eng'? 'RESULTS BY QUARTER' : 'REZULTATI PO ČETRTINAH', 
+            [language == 'eng'? 'Q1' : '1.', language == 'eng'? 'Q2' : '2.',language == 'eng'? 'Q3' : '3.',language == 'eng'? 'Q4' : '4.'])
         break;
         default:
-          return tcpStrings.quarter_1.in()
+          return tcpStrings.quarter_1.in( language == 'eng'? 'RESULTS BY QUARTER' : 'REZULTATI PO ČETRTINAH', language == 'eng'? 'Q1' : '1.')
     }
   }
   const selectMain = () => {
@@ -195,12 +199,15 @@ function QuarterCounter(props) {
       <FoulsByQuarter
         quarterFouls={props.quarterFouls}
       />
-      <ComButton 
-        text={'score by quarters'}
-        messageIn={selectIn()}
-        messageMain={selectMain()}
-        onClick={()=>{props.setEscCommand(selectOut())}}
-      />
+      <Language.Consumer> 
+        {language => <ComButton 
+          text={'score by quarters'}
+          messageIn={selectIn(language)}
+          messageMain={selectMain()}
+          onClick={()=>{props.setEscCommand(selectOut())}}
+        />
+      }
+      </Language.Consumer>
     </StyledQuarterCounter>
   )
 }

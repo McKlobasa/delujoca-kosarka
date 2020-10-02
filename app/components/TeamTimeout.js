@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom';
 import styled from 'styled-components'
+import ComButton from './ComButton.js'
+import tcpStrings from '../tcpStrings.js'
 
 const Half = styled.p`
   flex: 1;
@@ -11,27 +13,6 @@ const Half = styled.p`
   background-color: transparent;
   vertical-align: middle;
 `
-const Button = styled.button`
-  flex: 1; 
-  width: 100%;
-  background-color: var(--backgroundColor); 
-  border: 1px solid var(--backgroundDarkerColor); 
-  font-size: 1em; 
-  font-weight: bold;
-  color: var(--textColor);
-  outline: none;
-  flex-grow: 1;
-  padding: 5px;
-
-  &: hover { 
-    background-color: var(--backgroundDarkerColor);
-  }
-  &: active {
-    background-color: var(--textColor);
-    color: var(--backgroundColor);
-    box-shadow: none;
-  }
-`
 const Timeout = styled.div`
   flex: 0.5;
   display: flex;
@@ -40,24 +21,29 @@ const Timeout = styled.div`
 `
 
 function TeamTimeout(props) {
-  const [timeout, setTimeout] = useState([0, 0])
   return(
     <Timeout>
-      <Button 
-        onClick={() => 
-          setTimeout(() => {
-            if (props.currentQuarter < 2) return [(timeout[0] + 1), timeout[1]]
-            else return [timeout[0], (timeout[1] + 1)]
-          })}
+      <ComButton 
+        text={'timeout'}
+        messageIn={tcpStrings.timeout.in()}
+        messageMain={tcpStrings.timeout.main(props.teamTitle)}
+        onClick={() => {
+          props.setEscCommand(tcpStrings.timeout.out())
+          props.setTimeout(() => {
+            if (props.currentQuarter < 2) return [(props.timeout[0] + 1), props.timeout[1]]
+            else return [props.timeout[0], (props.timeout[1] + 1)]
+          })
+        }}
         onContextMenu={() => 
-          setTimeout(() => {
-            if (props.currentQuarter < 2) return [(timeout[0] - 1), timeout[1]]
-            else return [timeout[0], (timeout[1] - 1)]
-          })}
+          props.setTimeout(() => {
+            if (props.currentQuarter < 2) return [(props.timeout[0] - 1), props.timeout[1]]
+            else return [props.timeout[0], (props.timeout[1] - 1)]
+          })
+        }
 
-      >{'Timeout'}</Button>
-      <Half>{'1st half: ' + timeout[0]}</Half>
-      <Half>{'2nd half: ' + timeout[1]}</Half>
+      />
+      <Half>{'1st half: ' + props.timeout[0]}</Half>
+      <Half>{'2nd half: ' + props.timeout[1]}</Half>
     </Timeout>
   )
 }

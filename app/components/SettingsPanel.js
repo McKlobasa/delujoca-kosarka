@@ -48,7 +48,7 @@ const StyledInput = styled.input`
 `
 const Title = styled.h1`
   font-size: 15px;
-  color: var(--textColor)
+  color: var(--textColor);
 `
 
 function SettingsElements(props) {
@@ -65,7 +65,13 @@ function SettingsElements(props) {
           value={props.connection.port}
         />
       </div>
-        <Title>lineup XLSX path</Title>
+      <Title>clock ip</Title>
+      <FastTextInput 
+        key={50}
+        text={props.clockIP}
+        setText={props.setClockIP}
+      />
+      <Title>lineup XLSX path</Title>
       <FileSelector
         key={1}
         setPath={props.setExcelLineup}
@@ -108,8 +114,10 @@ function SettingsElements(props) {
         text={props.autocompleteSheet}
         setText={props.setAutocompleteSheet}
       />
-      <FastTextInput 
-      />
+      <select style={{backgroundColor: 'white', border: 'none', outline: 'none', color:'grey', marginLeft: '20px', outline: 'none'}} onChange={(event) => props.setLanguage(event.target.value)}>
+        <option value="eng">eng</option>
+        <option value="slo">slo</option>
+      </select>
     </StyledContainer>
   )
 }
@@ -123,6 +131,9 @@ function SettingsPanel(props) {
         closeOnDocumentClick
       >
       <SettingsElements
+        setLanguage={props.setLanguage}
+        clockIP={props.clockIP}
+        setClockIP={props.setClockIP}
         autocompletePath={props.autocompletePath}
         autocompleteSheet={props.autocompleteSheet}
         setAutocompletePath={props.setAutocompletePath}

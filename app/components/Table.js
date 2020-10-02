@@ -13,7 +13,7 @@ const StyledTopRow = styled.div`
   font-size: 1vw;
 `
 const TopRowCell = styled.div`
-  padding: 2px;
+  padding: 0px;
   color: var(--backgroundColor);
   flex: ${props => props.size};
   width: 100%;
@@ -30,7 +30,7 @@ const Container = styled.div`
 `
 const Input = styled.input`
   padding: 0px;
-  font-size: 18px;
+  font-size: 13px;
   color: ;
   flex: ${props => props.size};
   outline: none;
@@ -38,7 +38,7 @@ const Input = styled.input`
   border: none;
   color: ${props => props.isLast ? 'var(--backgroundColor)' : 'var(--textColor)'};
 
-  background: ${props => props.isLast ? 'var(--secondaryColor1)' 
+  background: ${props => props.isLast ? 'grey' 
                          : (props.isOdd ?'var(--backgroundColor)' : 'var(--backgroundDarkerColor)' )}
   &: focus {
     background-color: var(--mainColor1);
@@ -69,8 +69,7 @@ const Line = styled.div`
 
 function Button(props) {
   const [selectedPlayers, dispatch] = useContext(StartingPlayersContext)
-  const selected = !!selectedPlayers.find(p => p.name == props.name) 
-  console.log(selectedPlayers)
+  const selected = (!!selectedPlayers.find(p => p.name == props.name) && !!selectedPlayers.find(p => p.surname == props.surname))
   return (
     <StickyButton 
       selected={selected} 
@@ -179,7 +178,7 @@ function Row(props) {
         changeValue={props.changeValue}
       />
       <Button 
-        name={`${props.data.grid[props.row][2].value}`}
+        name={`${props.data.grid[props.row][1].value}`}
         surname={`${props.data.grid[props.row][2].value}`}
         key={`switch-${props.row}`} 
         rowNumber={props.row}

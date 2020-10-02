@@ -6,6 +6,7 @@ import TabSelector from './minicomponents/TabSelector.js'
  
 import useSpreadsheet from '../hooks/useSpreadsheet.js'
 import tcpStringsList from '../tcpStrings.js'
+import { Language } from '../context.js'
 
 import ComButtonHover from './ComButtonHover.js'
 import ComButton from './ComButton.js'
@@ -211,9 +212,8 @@ function Popup(props) {
     let sum = 0
     const data = (team == 'A' ? props.dataA.grid : props.dataB.grid)
     data.map((value, iter) => {
-      if (iter > 0) {sum += value[statPosition].value}
-    }
-    )
+      if (iter > 0) {Number(sum += Number(value[statPosition].value))}
+    })
     return sum
   }
 
@@ -221,62 +221,36 @@ function Popup(props) {
     <StyledPopup opened={props.opened}>
       <StyledColumn>
         <TabSelector 
-          tabs={['big stats   ', 'game leaders   ', 'top strelci  ', 'top fouls    ']}
+          tabs={['game leaders   ', 'top strelci  ', 'top fouls    ']}
           contents={[
           <div>
-            <ComButton 
-              text={'Big stats'}
-              messageIn={
-                tcpStringsList.bigStats.in('ABA_2017_18', 'info', props.teamTitleA, props.teamTitleB)
-              }
-              messageMain={
-                tcpStringsList.bigStats.main(
-                  'L', 
-                  statSum(3, 'A'),
-                  props.byPoints[0].A, 
-                  props.byPoints[1].A, 
-                  props.byPoints[2].A, 
-                  props.byPoints[1].A + props.byPoints[2].A, 
-                  statSum(15, 'A') + statSum(16, 'A'), 
-                  statSum(19, 'A'), 
-                  statSum(4, 'A')
-                ).concat(tcpStringsList.bigStats.main(
-                  'D', 
-                  statSum(3, 'B'),
-                  props.byPoints[0].B, 
-                  props.byPoints[1].B, 
-                  props.byPoints[2].B, 
-                  props.byPoints[1].B + props.byPoints[2].B, 
-                  statSum(15, 'B') + statSum(16, 'B') , 
-                  statSum(19, 'B'), 
-                  statSum(4, 'B')
-                  ))
+            <Language.Consumer>
+              {language => <ComButton
+                text={'game leaders'}
+                messageIn={
+                  tcpStringsList.gameLeaders.in(language == 'eng'? 'TEAM LEADERS' : 'NAJBOLJŠI IGRALCI', 
+                  language == 'eng' ? ['POINTS','ASSISTS','REBOUNDS','STEALS','FOULS'] : ['TOČKE', 'PODAJE', 'SKOKI', 'UKRADENE', 'PREKRŠKI'],
+                  props.teamTitleA, props.teamTitleB)
                 }
-              onClick={()=>{props.setEscCommand(tcpStringsList.bigStats.out())}}
-            />
-          </div>,
-          <div>
-            <ComButton
-              text={'game leaders'}
-              messageIn={
-                tcpStringsList.gameLeaders.in('ABA_2017_18', props.teamTitleA, props.teamTitleB)
+                messageKey={ tcpStringsList.gameLeaders.key() }
+                messageMain={
+                  tcpStringsList.gameLeaders.main([
+                    getTopPlayerObject('A', 'points', 3),
+                    getTopPlayerObject('A', 'assist', 19),
+                    getTopPlayerZaDveObject('A', 'rebounds', 16, 15),
+                    getTopPlayerObject('A', 'steals', 18),
+                    getTopPlayerObject('A', 'fouls', 4),
+                  ],[
+                    getTopPlayerObject('B', 'points', 3),
+                    getTopPlayerObject('B', 'assist', 19),
+                    getTopPlayerZaDveObject('B', 'rebounds', 16, 15),
+                    getTopPlayerObject('B', 'steals', 18),
+                    getTopPlayerObject('B', 'fouls', 4),
+                  ])}
+                onClick={()=>{props.setEscCommand(tcpStringsList.gameLeaders.out())}}
+              />
               }
-              messageMain={
-                tcpStringsList.gameLeaders.main([
-                  getTopPlayerObject('A', 'points', 3),
-                  getTopPlayerObject('A', 'assist', 19),
-                  getTopPlayerZaDveObject('A', 'rebounds', 16, 15),
-                  getTopPlayerObject('A', 'steals', 18),
-                  getTopPlayerObject('A', 'fouls', 4),
-                ],[
-                  getTopPlayerObject('B', 'points', 3),
-                  getTopPlayerObject('B', 'assist', 19),
-                  getTopPlayerZaDveObject('B', 'rebounds', 16, 15),
-                  getTopPlayerObject('B', 'steals', 18),
-                  getTopPlayerObject('B', 'fouls', 4),
-                ])}
-              onClick={()=>{props.setEscCommand(tcpStringsList.gameLeaders.out())}}
-            />
+            </Language.Consumer>
             <div style={{display: 'flex'}}>
               <div style={{paddingRight:'5px'}}>
               <p style={{fontSize: "15px", fontWeight: 'bold'}}>{'home'}</p>
@@ -298,24 +272,29 @@ function Popup(props) {
             </div>
           </div>, 
           <div>
-            <ComButton
-              text={'top strelci'}
-              messageIn={
-                tcpStringsList.topScorers.in(props.teamTitleA, props.teamTitleB)
+            <Language.Consumer>
+              {language => <ComButton
+                text={'top strelci'}
+                messageIn={
+                  tcpStringsList.topScorers.in(language == 'eng' ? 'TOP SCORERS': 'NAJBOLJŠI STRELCI', 
+                  props.teamTitleA, props.teamTitleB)
+                }
+                messageMain={
+                  tcpStringsList.topScorers.main(
+                    getTopFive('A', 3).map((player, iter) => {
+                      if (player) return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
+                      else return {name: '', score: 0}
+                    }),
+                    getTopFive('B', 3).map((player, iter) => {
+                      if (player)  return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
+                      else return {name: '', score: 0}
+                    })
+                  )}
+                messageKey={ tcpStringsList.topScorers.key() }
+                onClick={()=>{props.setEscCommand(tcpStringsList.topScorers.out())}}
+              />
               }
-              messageMain={
-                tcpStringsList.topScorers.main(
-                  getTopFive('A', 3).map((player, iter) => {
-                    if (player) return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
-                    else return {name: '', score: 0}
-                  }),
-                  getTopFive('B', 3).map((player, iter) => {
-                    if (player)  return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
-                    else return {name: '', score: 0}
-                  })
-                )}
-              onClick={()=>{props.setEscCommand(tcpStringsList.topScorers.out())}}
-            />
+            </Language.Consumer>
             <div style={{display: 'flex'}}>
               <div style={{paddingRight:'5px'}}>
               <p style={{fontSize: "15px", fontWeight: 'bold'}}>{'home'}</p>
@@ -337,24 +316,29 @@ function Popup(props) {
             </div>
           </div>, 
           <div>
-            <ComButton
-              text={'top fouls'}
-              messageIn={
-                tcpStringsList.topScorers.in(props.teamTitleA, props.teamTitleB)
-              }
-              messageMain={
-                tcpStringsList.topScorers.main(
-                  getTopFive('A', 3).map((player, iter) => {
-                    if (player) return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
-                    else return {name: '', score: 0}
-                  }),
-                  getTopFive('B', 3).map((player, iter) => {
-                    if (player)  return {name: `${player[1].value} ${player[2].value}`, score: player[3].value}
-                    else return {name: '', score: 0}
-                  })
-                )}
-              onClick={()=>{props.setEscCommand(tcpStringsList.topScorers.out())}}
-            />
+            <Language.Consumer>
+              {language => <ComButton
+                text={'top fouls'}
+                messageIn={
+                  tcpStringsList.topScorers.in(language == 'eng' ? 'TOP FOULS': 'NAJVEČ PREKRŠKOV', 
+                  props.teamTitleA, props.teamTitleB)
+                }
+                messageMain={
+                  tcpStringsList.topScorers.main(
+                    getTopFive('A', 4).map((player, iter) => {
+                      if (player) return {name: `${player[1].value} ${player[2].value}`, score: player[4].value}
+                      else return {name: '', score: 0}
+                    }),
+                    getTopFive('B', 4).map((player, iter) => {
+                      if (player)  return {name: `${player[1].value} ${player[2].value}`, score: player[4].value}
+                      else return {name: '', score: 0}
+                    })
+                  )}
+                messageKey={ tcpStringsList.topScorers.key() }
+                onClick={()=>{props.setEscCommand(tcpStringsList.topScorers.out())}}
+              />
+                }
+            </Language.Consumer>
             <div style={{display: 'flex'}}>
               <div style={{paddingRight:'5px'}}>
               <p style={{fontSize: "15px", fontWeight: 'bold'}}>{'home'}</p>

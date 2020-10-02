@@ -52,25 +52,10 @@ function TeamTitle(props) {
   const [nameTemp, setNameTemp] = useState(props.teamTitle)
   const teamData = useSpreadsheet(props.autocompletePath, props.autocompleteSheet)
   return (
-    <Container>{/*
+    <Container>
       <Input1 
-        value={nameTemp} 
-        onChange={(event) => {
-          setNameTemp(event.target.value)
-        }}
-        onBlur={(event) => {
-          props.setTeamTitle(nameTemp)
-          teamData.grid.map((row, iter) => {
-            if ( row[0].value == event.target.value ) {
-              props.setTeamTitle(row[0].value)
-              props.setTeamShort(row[2].value)
-              props.setLogo(row[3].value)
-            }
-          })
-        }}
-        type="text" />*/}
-
-      <Input1 type={"text"} list={"teams"} 
+        type={"text"} 
+        list={"teams"} 
         onChange={(event) => {
           props.setTeamTitle(nameTemp)
           teamData.grid.map((row, iter) => {
@@ -81,7 +66,6 @@ function TeamTitle(props) {
             }
           })
         }}
-
       />
       <datalist id={"teams"}>{
         teamData.grid.map((row, iter) => {

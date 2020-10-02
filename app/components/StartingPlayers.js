@@ -7,6 +7,7 @@ import {StartingPlayersContext} from '../context.js'
 const StyledStartingPlayers = styled.div`
   display: flex;
   width: 100%;
+  max-height: 30px;
   flex:1;
   flex-wrap: wrap;
   justify-content: flex-start;

@@ -133,7 +133,7 @@ const StyledButtonRow = styled.div`
 `
 const StyledButtonBoard = styled.div`
   flex: 2;
-  min-width: 400px;
+  min-width: 200px;
   display: flex; 
   align-items: stretch;
   flex-direction: column;
@@ -146,6 +146,7 @@ const StyledScoreInput = styled.input`
   border: none
   height: 90%;
   color: var(--textColor);
+  outline: none;
   font-size: 6vh;
   font-weight: bold;
   text-align: center;
@@ -163,7 +164,7 @@ const StyledScoreText = styled.div`
 const StyledScoreBoard = styled.div`
   flex:1;
   display: flex; 
-  min-width: 600px;
+  min-width: 300px;
   min-height: 150px;
   position: relative;
   justify-content: center;

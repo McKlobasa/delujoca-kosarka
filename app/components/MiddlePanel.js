@@ -11,11 +11,6 @@ import StartPopup        from './StartPopup.js'
 import SettingsPanel     from './SettingsPanel.js'
 import Clock             from './Clock.js'
 import GfxBoard          from './GfxBoard.js'
-import ExpressTest       from './ExpressTest.js'
-import ElectronTest      from './ElectronTest.js'
-import InputDropDown     from './InputDropDown.js'
-
-import TabSelector from './minicomponents/TabSelector.js'
 
 import { remote } from 'electron'
 
@@ -30,10 +25,11 @@ const Middle = styled.div`
   align-items: stretch;
   position: relative;
   border: 2px solid var(--backgroundDarkerColor);
+  overflow-x: scroll;
 `
 function MiddlePanel(props) {
   const { send } = useSocket()
-  const escIsPressed = useKey('F8')
+  const escIsPressed = useKey('Escape')
   const [compensation, setCompensation] = useState({
     offReb: {A: 0, B: 0},
     defReb: {A: 0, B: 0},
@@ -44,7 +40,7 @@ function MiddlePanel(props) {
     assists: {A: 0, B: 0},
     missed: {A: 0, B: 0},
   })
-
+  const [clockIP, setClockIP] = useState('localhost')
   const handleClick = () => {
     remote.dialog.showOpenDialogSync(dialogOptions, (index) => {
       console.log('information-dialog-selection', index);
@@ -55,7 +51,7 @@ function MiddlePanel(props) {
     if (escIsPressed) {
       console.log('useEffect is triggered')
       send(props.escCommand)
-      //props.setEscCommand('')
+      props.setEscCommand('')
     }
   })
 
@@ -95,12 +91,15 @@ function MiddlePanel(props) {
         teamTitleB={props.teamTitleB}
       /> 
       <GfxBoard 
+        teamTitleA={props.teamTitleA}
+        teamTitleB={props.teamTitleB}
         teamShortA={props.teamShortA}
         teamShortB={props.teamShortB}
         setEscCommand={props.setEscCommand}
         connection={props.connection}
         score={props.score}
         byPoints={props.byPoints}
+        fouls={props.fouls}
         missed={props.missed}
         dataA={props.spTeam1}
         dataB={props.spTeam2}
@@ -118,6 +117,8 @@ function MiddlePanel(props) {
         setEscCommand={props.setEscCommand}
       />
       <Clock 
+        timeoutA={props.timeoutA}
+        timeoutB={props.timeoutB}
         currentQuarter={props.currentQuarter}
         score={props.score}
         teamShortA={props.teamShortA}
@@ -126,6 +127,7 @@ function MiddlePanel(props) {
         logoA={props.logoA}
         logoB={props.logoB}
         quarterFouls={props.quarterFouls}
+        clockIP={clockIP}
       />
       <StartPopup
         standingsPath={props.standingsPath}
@@ -166,6 +168,9 @@ function MiddlePanel(props) {
         setRefereeCountry3={props.setRefereeCountry3}
       />
       <SettingsPanel 
+        setLanguage={props.setLanguage}
+        clockIP={clockIP}
+        setClockIP={setClockIP}
         logoA={props.logoA}
         logoB={props.logoB}
         setLogoA={props.setLogoA}

@@ -26,53 +26,73 @@ const Display = styled.p`
 `
 
 function Clock(props) {
-  const [time, setTime] = useState({ data : undefined }) 
-  useEffect(() => {
-        callBackendAPI()
-          .then(res => {
-            try {
-              setTime({ data: res.express })
-            } catch {
-              console.log('effect mori')
-            }
-          })
-          .catch(err => console.log(err));
-  }) 
-  const callBackendAPI = async () => {
-    try {
-      const response = await fetch('http://localhost:5555/express_backend');
-      const body = await response.json();
-      if (response.status !== 200) {
-      }
-      return body;
-    } catch {
-      console.log('ura ne dela')
-    }
-  };
-
   const { send } = useSocket()
   const [clockIsIn, setClockIsIn] = useState(false)
+  const [time, setTime] = useState('10:00')
+  const [attack, setAttack] = useState('24')
+  const [clockMode, setClockMode] = useState('manual')
+  console.log(clockMode)
+
+
+  const callBackendAPI = async () => {
+    if (clockMode == 'manual') {
+      try {
+        const response = await fetch(`http://${props.clockIP}:5555/rocna_ura`);
+        const responseContent = await response.json();
+      
+        if (response.status !== 200) {
+          console.log('bad response')
+        } else {
+          setTime(responseContent.time)
+          setAttack(responseContent.attack)
+        }
+        return responseContent
+      } catch {
+        console.log('clock not connected')
+      }
+    }
+  }
+
+  useEffect(() => {
+    const interval = setInterval(callBackendAPI, 200)
+    return () => clearInterval(interval)
+  }) 
+
 
   useEffect(() => {
     if (clockIsIn) {
-      tcpStrings.clock.main('10:00', props.teamShortA, props.teamShortB, 
+    console.log('it is updated')
+      tcpStrings.clock.main(time, attack,props.teamShortA, props.teamShortB, 
         props.currentQuarter + 1, props.score.A, props.score.B, props.logoA, props.logoB,
-        {A: 2, B: 3}, props.quarterFouls[props.currentQuarter]).map((string, iter)=>{send(string)})
+        {A: props.timeoutA[Math.floor(props.currentQuarter / 2)], B: props.timeoutB[Math.floor(props.currentQuarter / 2)]}, 
+        props.quarterFouls[props.currentQuarter]).map((string, iter) => {send(string)})
     }
-  }, [props.teamShortA, props.teamShortB, props.currentQuarter, props.score, props.logoA, props.logoB, props.quarterFouls])
-  return(
+  }, [props.teamShortA, props.teamShortB, props.currentQuarter, props.score, props.logoA, props.logoB, props.quarterFouls[props.currentQuarter], props.quarterFouls, props.timeoutA, props.timeoutB, time, attack])
+
+  return (
     <Container>
       <Display>
-        {time.data}
+        {`${time}   ${attack}`}
+        <select style={{backgroundColor: 'white', border: 'none', outline: 'none', color:'grey', marginLeft: '20px', outline: 'none'}} onChange={(event) => setClockMode(event.target.value)}>
+          <option value="manual">MANUAL</option>
+          <option value="bypassed">BYPASSED</option>
+        </select> 
       </Display>
       <Buttons>
         <ComButton 
           text={'Clock IN'}
           messageIn={tcpStrings.clock.in()}
-          messageMain={ tcpStrings.clock.main('10:00', props.teamShortA, props.teamShortB, 
-            props.currentQuarter + 1, props.score.A, props.score.B, props.logoA, props.logoB, {A: 2, B: 3}, props.quarterFouls[props.currentQuarter])}
+          messageKey={tcpStrings.clock.key()}
+          messageMain={ clockMode == 'manual' ?
+            tcpStrings.clock.main(time, attack, props.teamShortA, props.teamShortB, 
+              props.currentQuarter + 1, props.score.A, props.score.B, props.logoA, props.logoB, 
+              {A: props.timeoutA[Math.floor(props.currentQuarter / 2)], B: props.timeoutB[Math.floor(props.currentQuarter / 2)]}, 
+            props.quarterFouls[props.currentQuarter]) :
+            tcpStrings.clock.main2( props.teamShortA, props.teamShortB, 
+              props.currentQuarter + 1, props.score.A, props.score.B, props.logoA, props.logoB, 
+              {A: props.timeoutA[Math.floor(props.currentQuarter / 2)], B: props.timeoutB[Math.floor(props.currentQuarter / 2)]}, 
+            props.quarterFouls[props.currentQuarter])} 
           onClick={()=>{setClockIsIn(true)}}
-          
         />
         <ComButton 
           text={'Clock OUT'}

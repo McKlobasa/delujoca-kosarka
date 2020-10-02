@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import styled from 'styled-components'
 import ComButton from './ComButton.js'
 import tcpStrings from '../tcpStrings.js'
+import { Language } from '../context.js'
 
 const Input = styled.input`
   flex: 2;
@@ -33,12 +34,15 @@ function CoachInput(props) {
   const [coachValue, setCoachValue] = useState('')
   return(
     <Coach>
-      <ComButton
-        text={'Coach'}
-        onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
-        messageIn={tcpStrings.coach.in()}
-        messageMain={tcpStrings.coach.main( props.teamTitle, coachValue )}
-      />
+      <Language.Consumer> 
+        {language => <ComButton
+          text={'Coach'}
+          onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
+          messageIn={tcpStrings.coach.in(language == 'eng'? `HEAD COACH ${props.teamTitle}`: ` GLAVNI TRENER ${props.teamTitle}`)}
+          messageKey={tcpStrings.coach.key()}
+          messageMain={tcpStrings.coach.main( props.teamTitle, coachValue )}
+        />}
+      </Language.Consumer>
       <Input
         value={coachValue} 
         onChange={(event) => {setCoachValue(event.target.value)}}

@@ -9,13 +9,14 @@ import ComButtonSpreadsheet from './ComButtonSpreadsheet.js'
 import TabSelector from './minicomponents/TabSelector.js'
 import TableShow from './TableShow.js'
 
+import { Language } from '../context.js'
 import useSpreadsheet from '../hooks/useSpreadsheet.js'
 
 const StyledPopup = styled.div`
   height: 0px;
   display: flex;
   flex-direction: row;
-  overflow-y: hidden;
+  overflow-y: scroll;
 
   ${({opened}) => opened && css`
   transition: all 0.2s ease;
@@ -59,7 +60,7 @@ const Container = styled.div`
 `
 const Title = styled.div`
   color: var(--textColor);
-  flex: 1
+  flex: 1;
 `
 const Input = styled.input`
   border: 1px solid var(--backgroundDarkColor);
@@ -73,6 +74,7 @@ const Input = styled.input`
   background-color: var(--backgroundColor);
   outline: none;
   padding-left: 10px;
+  width: 100%;
 
   &:focus {
     background-color: var(--mainColor1);
@@ -112,8 +114,6 @@ const StyledButton = styled.button`
   }
 `
 
-
-
 function TextInput(props) {
   const [temp, setTemp] = useState('')
   return(
@@ -148,21 +148,26 @@ function ButtonBoard(props) {
         <ComButton 
           text={'matchID'}
           messageIn={tcpStrings.matchID.in()}
+          messageKey={tcpStrings.matchID.key()}
           messageMain={tcpStrings.matchID.main(props.round, props.teamTitleA, 
             props.teamTitleB, props.logoA, props.logoB, props.location, {A:2, B: 3})}
           onClick={()=>{props.setEscCommand(tcpStrings.matchID.out())}}
         />
-        <ComButton 
-          text={'referees'}
-          messageIn={tcpStrings.referees.in('ABA_2017_18')}
-          messageMain={tcpStrings.referees.main(
-            props.referee1 + ' (' + props.refereeCountry1 + ')', 
-            props.referee2 + ' (' + props.refereeCountry2 + ')', 
-            props.referee3 + ' (' + props.refereeCountry3 + ')', 
-          )}
-          onClick={()=>{props.setEscCommand(tcpStrings.referees.out())}}
+        <Language.Consumer>
+        { language => <ComButton 
+            text={'referees'}
+            messageIn={tcpStrings.referees.in(language == 'eng'? `REFEREES`:`SODNIKI`)}
+            messageKey={tcpStrings.referees.key()}
+            messageMain={tcpStrings.referees.main(
+              props.referee1 + ' (' + props.refereeCountry1 + ')', 
+              props.referee2 + ' (' + props.refereeCountry2 + ')', 
+              props.referee3 + ' (' + props.refereeCountry3 + ')', 
+            )}
+            onClick={()=>{props.setEscCommand(tcpStrings.referees.out())}}
+          />
 
-        />
+        }
+        </Language.Consumer>
     </StyledButtonBoard>
   )
 }
@@ -180,26 +185,38 @@ function Popup(props) {
           <TableShow 
             data={fixtures}
           /> 
-          <ComButton 
-            text={'fixtures'}
-            messageIn={tcpStrings.fixtures.in()}
-            messageMain={tcpStrings.fixtures.main(fixtures.grid)}
-            onClick={()=>{
-              props.setEscCommand(tcpStrings.fixtures.out())
-            }}
-          /></div>,
+          <Language.Consumer>
+            {language => <ComButton 
+                text={'fixtures'}
+                messageIn={tcpStrings.fixtures.in(language == 'eng'? `FIXTURES ROUND ${props.round}`:`PARI ${props.round}. KROGA`)}
+                messageKey={tcpStrings.fixtures.key()}
+                messageMain={tcpStrings.fixtures.main(fixtures.grid)}
+                onClick={() => {
+                  props.setEscCommand(tcpStrings.fixtures.out())
+                }}
+              />
+            }
+          </Language.Consumer>
+        </div>,
           <div>
           <TableShow 
             data={standings}
           /> 
-          <ComButton 
-            text={'standings'}
-            messageIn={tcpStrings.standings.in('ABA_2017_18')}
-            messageMain={tcpStrings.standings.main(standings.grid, props.round)}
-            onClick={()=>{
-              props.setEscCommand(tcpStrings.standings.out())
-            }}
-          /></div>
+          <Language.Consumer>
+          { language =>  <ComButton 
+              text={'standings'}
+              messageIn={tcpStrings.standings.in(
+                language == 'eng'? `STANDINGS ROUND ${props.round}`:`LESTVICA V ${props.round}. KROGU`
+              )}
+              messageKey={tcpStrings.standings.key()}
+              messageMain={tcpStrings.standings.main(standings.grid, 'STANDINGS')}
+              onClick={() => {
+                props.setEscCommand(tcpStrings.standings.out())
+              }}
+            />
+          }
+          </Language.Consumer>
+          </div>
         ]}
       />
       <div style={{flex: 2}}>
@@ -229,6 +246,7 @@ function Popup(props) {
             setText={props.setLocation}
           />
           <TextInput 
+            style={{flex: '0.2'}}
             title={'  comentator'}
             text={props.comentator}
             setText={props.setComentator}
@@ -241,7 +259,7 @@ function Popup(props) {
             setText={props.setReferee1}
           />
           <TextInput 
-            style={{flex: '0.3'}}
+            style={{flex: '0.2'}}
             title={'  referee 1 country'}
             text={props.refereeCountry1}
             setText={props.setRefereeCountry1}
@@ -254,7 +272,7 @@ function Popup(props) {
             setText={props.setReferee2}
           />
           <TextInput 
-            style={{flex: '0.3'}}
+            style={{flex: '0.2'}}
             title={'  referee 2 country'}
             text={props.refereeCountry2}
             setText={props.setRefereeCountry2}
@@ -267,7 +285,7 @@ function Popup(props) {
             setText={props.setReferee3}
           />
           <TextInput 
-            style={{flex: '0.3'}}
+            style={{flex: '0.2'}}
             title={'  referee 3 country'}
             text={props.refereeCountry3}
             setText={props.setRefereeCountry3}
@@ -282,6 +300,82 @@ function Popup(props) {
             setText={props.setRound}
           />
         </StyledTextCouple>
+        <StyledTextCouple>
+          <TextInput 
+            title={'vrstica 1'}
+            text={props.line11}
+            setText={props.setLine11}
+          />
+          <TextInput 
+            title={'vrstica 2'}
+            text={props.line12}
+            setText={props.setLine12}
+          />
+          <ComButton
+            text={'two line'}
+            onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
+            messageIn={tcpStrings.coach.in(props.line12)}
+            messageKey={tcpStrings.coach.key()}
+            messageMain={tcpStrings.coach.main( '', props.line11)}
+          />
+        </StyledTextCouple>
+        <StyledTextCouple>
+          <TextInput 
+            title={'vrstica 1'}
+            text={props.line21}
+            setText={props.setLine21}
+          />
+          <TextInput 
+            title={'vrstica 2'}
+            text={props.line22}
+            setText={props.setLine22}
+          />
+          <ComButton
+            text={'two line'}
+            onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
+            messageIn={tcpStrings.coach.in(props.line22)}
+            messageKey={tcpStrings.coach.key()}
+            messageMain={tcpStrings.coach.main( '', props.line21)}
+          />
+        </StyledTextCouple>
+        <StyledTextCouple>
+          <TextInput 
+            title={'vrstica 1'}
+            text={props.line31}
+            setText={props.setLine31}
+          />
+          <TextInput 
+            title={'vrstica 2'}
+            text={props.line32}
+            setText={props.setLine32}
+          />
+          <ComButton
+            text={'two line'}
+            onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
+            messageIn={tcpStrings.coach.in(props.line32)}
+            messageKey={tcpStrings.coach.key()}
+            messageMain={tcpStrings.coach.main( '', props.line31)}
+          />
+        </StyledTextCouple>
+        <StyledTextCouple>
+          <TextInput 
+            title={'vrstica 1'}
+            text={props.line41}
+            setText={props.setLine41}
+          />
+          <TextInput 
+            title={'vrstica 2'}
+            text={props.line42}
+            setText={props.setLine42}
+          />
+          <ComButton
+            text={'two line'}
+            onClick={()=>{props.setEscCommand(tcpStrings.coach.out())}}
+            messageIn={tcpStrings.coach.in(props.line42)}
+            messageKey={tcpStrings.coach.key()}
+            messageMain={tcpStrings.coach.main( '', props.line41)}
+          />
+        </StyledTextCouple>
       </div>
     </StyledPopup>
   )
@@ -289,6 +383,14 @@ function Popup(props) {
 
 function StartPopup(props) {
   const [opened, setOpened] = useState(false)
+  const [line11, setLine11] = useState('')
+  const [line12, setLine12] = useState('')
+  const [line21, setLine21] = useState('')
+  const [line22, setLine22] = useState('')
+  const [line31, setLine31] = useState('')
+  const [line32, setLine32] = useState('')
+  const [line41, setLine41] = useState('')
+  const [line42, setLine42] = useState('')
   return(
     <div>
       <TriggerButton 
@@ -336,6 +438,23 @@ function StartPopup(props) {
         setReferee3={props.setReferee3}
         refereeCountry3={props.refereeCountry3}
         setRefereeCountry3={props.setRefereeCountry3}
+
+        line11={line11}
+        setLine11={setLine11}
+        line12={line12}
+        setLine12={setLine12}
+        line21={line21}
+        setLine21={setLine21}
+        line22={line22}
+        setLine22={setLine22}
+        line31={line31}
+        setLine31={setLine31}
+        line32={line32}
+        setLine32={setLine32}
+        line41={line41}
+        setLine41={setLine41}
+        line42={line42}
+        setLine42={setLine42}
         
       />
     </div>

@@ -5,14 +5,19 @@ const tcpStringsList = {
 
   matchID: {
     in : () => [
-      "0 RENDERER SET_OBJECT SCENE*" + project + "/PLAYOUT/uvod\0",
-      "0 "+'RENDERER*STAGE*DIRECTOR*$uvod_in START'+'\0',
+      `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/uvod\0`,
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$uvod_in START\0`,
+      `0 RENDERER*TREE*$Uvod*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$uvod_in SHOW END\0`,
+      `0 RENDERER*TREE*$Uvod*KEY*DRAW_KEY SET 0\0`
     ],
     main: (round, teamTitleA, teamTitleB, logoA, logoB, lokacija) => [
       "0 "+'RENDERER*TREE*$flag_uvod_ekipa_1*IMAGE SET IMAGE*' + project + '/FLAGS/'+logoA+'\0',
       "0 "+'RENDERER*TREE*$flag_uvod_ekipa_2*IMAGE SET IMAGE*' + project + '/FLAGS/'+logoB+'\0',
-      "0 "+'RENDERER*TREE*$ekipa_uvod_levo*GEOM*TEXT SET '+ teamTitleA +'\0',
-      "0 "+'RENDERER*TREE*$ekipa_uvod_desno*GEOM*TEXT SET '+ teamTitleB+'\0',
+      "0 "+'RENDERER*TREE*$ekipa_uvod_levo*GEOM*TEXT SET ' + teamTitleA + '\0',
+      "0 "+'RENDERER*TREE*$ekipa_uvod_desno*GEOM*TEXT SET ' + teamTitleB + '\0',
       "0 "+'RENDERER*TREE*$runda*GEOM*TEXT SET '+ round +'\0',
       "0 "+'RENDERER*TREE*$lokacija*GEOM*TEXT SET '+lokacija+'\0',
     ],
@@ -20,14 +25,20 @@ const tcpStringsList = {
   },
 
 
-  pari :{
+  pari: {
     in : (info) => {
-      return[
+      return [
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/pari'+'\0',  //starta sceno -> path 
         "0 "+'RENDERER*STAGE*DIRECTOR*$pari_in START'+'\0', //start animacije
         "0 "+'RENDERER*TREE*$Fixtures*GEOM*TEXT SET '+ info +'\0',
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$pari_in START\0`,
+      `0 RENDERER*TREE*$Pari*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$pari_in SHOW END\0`,
+      `0 RENDERER*TREE*$Pari*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (no, par, datum, i) => {
       return [ //to loopaj v programu
           "0 "+'RENDERER*TREE*$' + i + '*GEOM*TEXT SET '+ no +'\0',
@@ -44,9 +55,9 @@ const tcpStringsList = {
   lestvica: {
     lestvica_in : (info) => {
       return[
-        "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/lestvica'+'\0',  //starta sceno -> path 
-        "0 "+'RENDERER*STAGE*DIRECTOR*$lestvica_in START'+'\0', //start animacije
-        "0 "+'RENDERER*TREE*$Fixtures*GEOM*TEXT SET '+ info +'\0',
+        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/lestvica\0`,
+        '0 RENDERER*STAGE*DIRECTOR*$lestvica_in START\0',
+        `0 RENDERER*TREE*$Fixtures*GEOM*TEXT SET ${info} \0`,
       ]
     },
     lestvica : (i,  ekipa, gp, wins, loses, diff, points) => {
@@ -74,6 +85,12 @@ const tcpStringsList = {
         "0 "+'RENDERER*TREE*$ime_trenerja*GEOM*TEXT SET '+ coach +'\0',
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$postava_in START\0`,
+      `0 RENDERER*TREE*$postava*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$postava_in SHOW END\0`,
+      `0 RENDERER*TREE*$postava*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (i, playerNo, playerName, height, age, position) => {
       return [ //to loopaj v programu
           "0 "+'RENDERER*TREE*$st' + i + '*GEOM*TEXT SET '+ playerNo +'\0',
@@ -98,6 +115,12 @@ const tcpStringsList = {
         "0 "+'RENDERER*TREE*$ekipa_stat_desno*GEOM*TEXT SET '+ teamB +'\0',
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in START\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in SHOW END\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (side, points, freeThrows, pts2, pts3, FG, rebounds, assists, fouls) => { /*side je lahko 'L', 'D'*/
       return [ //to loopaj v programu
           "0 "+'RENDERER*TREE*$' + side + '1*GEOM*TEXT SET '+ points +'\0',
@@ -116,12 +139,19 @@ const tcpStringsList = {
   },
 
   referees: {
-    in : (project) => {
+    in : (title) => {
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/sodniki'+'\0',  //starta sceno -> path 
         "0 "+'RENDERER*STAGE*DIRECTOR*$sodniki_in START'+'\0', //start animacije
+        `0 RENDERER*TREE*$Referees*GEOM*TEXT SET ${title}\0`,
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$sodniki_in START\0`,
+      `0 RENDERER*TREE*$sodniki*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$sodniki_in SHOW END\0`,
+      `0 RENDERER*TREE*$sodniki*KEY*DRAW_KEY SET 0\0`
+    ],
     main : (sodnik1, sodnik2, sodnik3) => { /*side je lahko 'L', 'D'*/
       return [ //to loopaj v programu
           "0 "+'RENDERER*TREE*$sodnik1*GEOM*TEXT SET '+ sodnik1 +'\0',
@@ -133,15 +163,27 @@ const tcpStringsList = {
       return   "0 "+'RENDERER*STAGE*DIRECTOR*$sodniki_out START'+'\0'
     },
   },
+
   gameLeaders : {
-    in : (info, teamA, teamB) => { //top scorers, top fouls
+    in : (title, texts, teamA, teamB) => { //top scorers, top fouls
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/game_leaders'+'\0',  //starta sceno -> path 
-        "0 "+'RENDERER*STAGE*DIRECTOR*$game_leaders_in START' +'\0',
         "0 "+'RENDERER*TREE*$ekipa_stat_levo*GEOM*TEXT SET '+ teamA +'\0',
         "0 "+'RENDERER*TREE*$ekipa_stat_desno*GEOM*TEXT SET '+ teamB +'\0',
+        `0 RENDERER*TREE*$naslov*GEOM*TEXT SET ${title}\0`,
+        `0 RENDERER*TREE*$1*GEOM*TEXT SET ${texts[0]}\0`,
+        `0 RENDERER*TREE*$2*GEOM*TEXT SET ${texts[1]}\0`,
+        `0 RENDERER*TREE*$3*GEOM*TEXT SET ${texts[2]}\0`,
+        `0 RENDERER*TREE*$4*GEOM*TEXT SET ${texts[3]}\0`,
+        `0 RENDERER*TREE*$5*GEOM*TEXT SET ${texts[4]}\0`,
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$game_leaders_in START\0`,
+      `0 RENDERER*TREE*$game_leaders*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$game_leaders_in SHOW END\0`,
+      `0 RENDERER*TREE*$game_leaders*KEY*DRAW_KEY SET 0\0`
+    ],
     main : (gameLeadersA, gameLeadersB) => { /*side je lahka 'l', 'd'*/
       return [ //to loopaj v programu
         `0 RENDERER*TREE*$ime_L1*GEOM*TEXT SET ${gameLeadersA[0].name}\0`,
@@ -172,15 +214,21 @@ const tcpStringsList = {
     },
   },
   topScorers : {
-    in : (teamA, teamB) => { //top scorers, top fouls
+    in : (title, teamA, teamB) => { //top scorers, top fouls
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/top_scorers_fouls'+'\0',  //starta sceno -> path 
         "0 "+'RENDERER*STAGE*DIRECTOR*$top_in START' +'\0',
         "0 "+'RENDERER*TREE*$ekipa_top_levo*GEOM*TEXT SET '+ teamA +'\0',
         "0 "+'RENDERER*TREE*$ekipa_top_desno*GEOM*TEXT SET '+ teamB +'\0',
-        "0 "+'RENDERER*TREE*$top_naslov*GEOM*TEXT SET POINT LEADERS\0',
+        `0 RENDERER*TREE*$top_naslov*GEOM*TEXT SET ${title}\0`,
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*top_in START\0`,
+      `0 RENDERER*TREE*$top*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$top_in SHOW END\0`,
+      `0 RENDERER*TREE*$top*KEY*DRAW_KEY SET 0\0`
+    ],
     main : (topScorersA, topScorersB) => { /*side je lahka 'l', 'd'*/
       return [ //to loopaj v programu
         `0 RENDERER*TREE*$imetop1l*GEOM*TEXT SET ${topScorersA[0].name}\0`,
@@ -234,26 +282,35 @@ const tcpStringsList = {
   },
 
   lineup : {
-    in : ( team ) => [
+    in : ( team, title ) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/postava\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$postava_in START\0`,
-        `0 RENDERER*TREE*$ekipa_postava*GEOM*TEXT SET ${team}\0`,
+        `0 RENDERER*TREE*$ekipa_postava*GEOM*TEXT SET ${title}\0`,
+    ],
+    key : () => [
+      "0 "+'RENDERER*STAGE*DIRECTOR*$postava_in START'+'\0', //start animacije
+      `0 RENDERER*TREE*$postava*KEY*DRAW_KEY SET 1\0`,
+      "0 "+'RENDERER*STAGE*DIRECTOR*$postava_in SHOW END'+'\0', //start animacije
+      `0 RENDERER*TREE*$postava*KEY*DRAW_KEY SET 0\0`,
     ],
     main : ( data, coach ) => {
-      let temp =  data.map((rowData, iter) => {
-          if (iter > 0) {
-            return `0 RENDERER*TREE*$st${iter}*GEOM*TEXT SET ${rowData[0].value}\0` +
-            `0 RENDERER*TREE*$ime_postava${iter}*GEOM*TEXT SET ${rowData[1].value + ' ' + rowData[2].value }\0` +
-            `0 RENDERER*TREE*$cm${iter}*GEOM*TEXT SET ${rowData[5].value}\0` +
-            `0 RENDERER*TREE*$a${iter}*GEOM*TEXT SET ${rowData[6].value}\0` +
-            `0 RENDERER*TREE*$p${iter}*GEOM*TEXT SET ${rowData[8].value}\0` 
-            
-          } else {
-            return `0 RENDERER*TREE*$ime_trenerja*GEOM*TEXT SET ${coach}\0`
-          } 
-        }
-      )
-      return temp 
+      try {
+        let temp =  data.grid.map((rowData, iter) => {
+            if (iter > 0) {
+              return `0 RENDERER*TREE*$st${iter}*GEOM*TEXT SET ${rowData[0].value}\0` +
+              `0 RENDERER*TREE*$ime_postava${iter}*GEOM*TEXT SET ${rowData[1].value + ' ' + rowData[2].value }\0` +
+              `0 RENDERER*TREE*$cm${iter}*GEOM*TEXT SET ${rowData[5].value}\0` +
+              `0 RENDERER*TREE*$a${iter}*GEOM*TEXT SET ${rowData[6].value}\0` +
+              `0 RENDERER*TREE*$p${iter}*GEOM*TEXT SET ${rowData[8].value}\0` 
+              
+            } else {
+              return `0 RENDERER*TREE*$ime_trenerja*GEOM*TEXT SET ${coach}\0`
+            } 
+          }
+        )
+        return temp 
+
+      } catch {
+      }
     },
     out : () =>  '0 RENDERER*STAGE*DIRECTOR*$postava_out START\0'
   },
@@ -262,13 +319,18 @@ const tcpStringsList = {
     in : (info, teamA, teamB, score) => { //top scorers, top fouls
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/SMALL_STATS'+'\0',  //starta sceno -> path 
-        "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
         "0 "+'RENDERER*TREE*$ekipa1*GEOM*TEXT SET '+ teamA +'\0',
         "0 "+'RENDERER*TREE*$ekipa2*GEOM*TEXT SET '+ teamB +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa1*GEOM*TEXT SET '+ score.A +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa2*GEOM*TEXT SET '+ score.B +'\0',
       ]
     },
+    key : () => [
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 1\0`,
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN SHOW END'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (points, missed) => {
       return [
         "0 "+'RENDERER*TREE*$i1*GEOM*TEXT SET ' + 'FREE THROWS' + '\0',
@@ -278,6 +340,7 @@ const tcpStringsList = {
         "0 "+'RENDERER*TREE*$1_1*GEOM*TEXT SET \0',
         "0 "+'RENDERER*TREE*$1_2*GEOM*TEXT SET \0',
         "0 "+'RENDERER*TREE*$1_3*GEOM*TEXT SET \0',
+        "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
 
         "0 "+'RENDERER*TREE*$2_1*GEOM*TEXT SET \0',
         "0 "+'RENDERER*TREE*$2_2*GEOM*TEXT SET \0',
@@ -318,13 +381,18 @@ const tcpStringsList = {
     in : (info, teamA, teamB, score) => { //top scorers, top fouls
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/SMALL_STATS'+'\0',  //starta sceno -> path 
-        "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
         "0 "+'RENDERER*TREE*$ekipa1*GEOM*TEXT SET '+ teamA +'\0',
         "0 "+'RENDERER*TREE*$ekipa2*GEOM*TEXT SET '+ teamB +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa1*GEOM*TEXT SET '+ score.A +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa2*GEOM*TEXT SET '+ score.B +'\0',
       ]
     },
+    key : () => [
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 1\0`,
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN SHOW END'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (steals, turnovers, assists) => {
       return [
         "0 "+'RENDERER*TREE*$i1*GEOM*TEXT SET ' + 'STEALS' + '\0',
@@ -360,13 +428,18 @@ const tcpStringsList = {
     in : (info, teamA, teamB, score) => { //top scorers, top fouls
       return[
         "0 "+'RENDERER SET_OBJECT SCENE*' + project +'/PLAYOUT/SMALL_STATS'+'\0',  //starta sceno -> path 
-        "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
         "0 "+'RENDERER*TREE*$ekipa1*GEOM*TEXT SET '+ teamA +'\0',
         "0 "+'RENDERER*TREE*$ekipa2*GEOM*TEXT SET '+ teamB +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa1*GEOM*TEXT SET '+ score.A +'\0',
         "0 "+'RENDERER*TREE*$rezultat_ekipa2*GEOM*TEXT SET '+ score.B +'\0',
       ]
     },
+    key : () => [
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN START'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 1\0`,
+      "0 "+'RENDERER*STAGE*DIRECTOR*$SMALL_STATS_IN SHOW END'+'\0', //start animacije
+      `0 RENDERER*TREE*$SMALL_STATS*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (FGs, defRebounds, offRebounds) => {
       return [
         "0 "+'RENDERER*TREE*$i1*GEOM*TEXT SET ' + 'FG%' + '\0',
@@ -408,13 +481,20 @@ const tcpStringsList = {
     out : () => `0 RENDERER*STAGE*DIRECTOR*$SMALL_STATS_OUT START\0`, 
   },
   startingPlayers: {
-    in : (teamAbr) => {
+    in : (teamAbr, title) => {
       return [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Na_Parketu\0`,  //starta sceno -> path 
         `0 RENDERER*STAGE*DIRECTOR*$Na_Parketu_IN START\0`, //start animacije
         `0 RENDERER*TREE*$ondf_klub*GEOM*TEXT SET ${teamAbr}\0`,
+        `0 RENDERER*TREE*$ondf*GEOM*TEXT SET ${title}\0`
       ]
     },
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$Na_Parketu_IN START\0`,
+      `0 RENDERER*TREE*$Na_Parketu*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$Na_Parketu_IN SHOW END\0`,
+      `0 RENDERER*TREE*$Na_Parketu*KEY*DRAW_KEY SET 0\0`,
+    ],
     main : (topPlayers) => [
       `0 RENDERER*TREE*$ondf1*GEOM*TEXT SET ${topPlayers[0]} - ${topPlayers[1]} - ${topPlayers[2]} - ${topPlayers[3]} - ${topPlayers[4]}\0`
     ],
@@ -423,116 +503,135 @@ const tcpStringsList = {
     },
   },
   coach : {
-    in : () => [
+    in : (title) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/podpis_2_line\0`,
         `0 RENDERER*STAGE*DIRECTOR*$podpis_2_line_in START\0`,
+        `0 RENDERER*TREE*$vrstica2*GEOM*TEXT SET ${title}\0`
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_line_in START\0`,
+      `0 RENDERER*TREE*$podpis_2_line*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_line_in SHOW END\0`,
+      `0 RENDERER*TREE*$podpis_2_line*KEY*DRAW_KEY SET 0\0`,
     ],
     main : ( teamName, coachName ) => [
-        `0 RENDERER*TREE*$vrstica1*GEOM*TEXT SET ${coachName}\0` +
-        `0 RENDERER*TREE*$vrstica2*GEOM*TEXT SET ${'HEAD COACH ' + teamName}\0` 
+        `0 RENDERER*TREE*$vrstica1*GEOM*TEXT SET ${coachName}\0` 
     ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_2_line_out START\0',      
-  },
-  freeThrows : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_in START\0`,
-    ],
-    main : ( surname, teamAbr, points, pts1, percent ) => [ //pts1={scored: , all: }
-        `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${points}\0` +
-        `0 RENDERER*TREE*$points_2*GEOM*TEXT SET 1 Pts: ${pts1.scored}/${pts1.all}\0` +
-        `0 RENDERER*TREE*$procenti*GEOM*TEXT SET ${percent}%\0`
-    ],
-    out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_out START\0',      
-  },
-  FGs : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_in START\0`,
-    ],
-    main : ( surname, teamAbr, points, fieldGoals, percent ) => [ //pts1={scored: , all: }
-        `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${points}\0` +
-        `0 RENDERER*TREE*$points_2*GEOM*TEXT SET field goals: ${fieldGoals.scored}/${fieldGoals.all}\0` +
-        `0 RENDERER*TREE*$procenti*GEOM*TEXT SET ${percent}%\0`
-    ],
-    out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_out START\0',      
-  },
-  threePoints : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_in START\0`,
-    ],
-    main : ( surname, teamAbr, points, pts3, percent ) => [ //pts1={scored: , all: }
-        `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${points}\0` +
-        `0 RENDERER*TREE*$points_2*GEOM*TEXT SET 1 Pts: ${pts3.scored}/${pts3.all}\0` +
-        `0 RENDERER*TREE*$procenti*GEOM*TEXT SET ${percent}%\0`
-    ],
-    out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_out START\0',      
-  },
-  twoPoints : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_in START\0`,
-    ],
-    main : ( surname, teamAbr, points, pts2, percent ) => [ //pts1={scored: , all: }
-        `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${points}\0` +
-        `0 RENDERER*TREE*$points_2*GEOM*TEXT SET 1 Pts: ${pts2.scored}/${pts2.all}\0` +
-        `0 RENDERER*TREE*$procenti*GEOM*TEXT SET ${percent}%\0`
-    ],
-    out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_out START\0',      
   },
   foulsPodpis : {
     in : () => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis_2\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
     ],
-    main : ( surname, teamAbr, fouls ) => [ //pts1={scored: , all: }
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in SHOW END\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( text, surname, teamAbr, fouls ) => [ //pts1={scored: , all: }
         `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET Fouls: ${fouls}\0`
+        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${text} ${fouls}\0`
     ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_2_out START\0',      
   },
   reboundsPodpis : {
     in : () => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis_2\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
     ],
-    main : ( surname, teamAbr, rebounds ) => [ //rebounds = {off: neki1, def: neki2}
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in SHOW END\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( text, surname, teamAbr, rebounds ) => [ //rebounds = {off: neki1, def: neki2}
         `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET Rebounds (Off/Deff): ${rebounds.off + '/' + rebounds.def}\0`
+        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${text} ${rebounds.off + '/' + rebounds.def}\0`
     ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_2_out START\0',      
   },
   assistsPodpis : {
     in : () => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis_2\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
     ],
-    main : ( surname, teamAbr, assists ) => [ //pts1={scored: , all: }
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in START\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_2_in SHOW END\0`,
+      `0 RENDERER*TREE*$podpis_2*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( text, surname, teamAbr, assists ) => [ //pts1={scored: , all: }
         `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
-        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET Assists: ${assists}\0`
+        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${text} ${assists}\0`
     ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_2_out START\0',      
+  },
+  podpis_points : {
+    in : () => [
+        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/Podpis\0`
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_in START\0`,
+      `0 RENDERER*TREE*$podpis*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$podpis_in SHOW END\0`,
+      `0 RENDERER*TREE*$podpis*KEY*DRAW_KEY SET 0\0`
+    ],
+    main : ( text, surname, teamAbr, allPoints, specificPoints, percent ) => [ //pts1={scored: , all: }
+        `0 RENDERER*TREE*$ime*GEOM*TEXT SET ${surname} (${teamAbr})\0` +
+        `0 RENDERER*TREE*$points_1*GEOM*TEXT SET ${allPoints} ${text[1]}\0` +
+        `0 RENDERER*TREE*$points_2*GEOM*TEXT SET ${text[0]} ${specificPoints.scored}/${specificPoints.all}\0` +
+        `0 RENDERER*TREE*$procenti*GEOM*TEXT SET ${percent}%\0`
+    ],
+    out : () => '0 RENDERER*STAGE*DIRECTOR*$podpis_out START\0',      
   },
   clock : {
     in : () => [
       `0 RENDERER*FRONT_LAYER SET_OBJECT SCENE*${project}/PLAYOUT/ura\0`,
-      `0 RENDERER*FRONT_LAYER*STAGE*DIRECTOR*$ura_in START\0`,
     ],
-    main : (time, teamAbrA, teamAbrB, quarter, scoreA, scoreB, logoA, logoB, timeouts = {A: 0, B: 0}, fouls = {A: 0, B: 0} ) => {
-      return [ 
-        "0 "+'RENDERER*FRONT_LAYER*TREE*TREE*$LOGO_1*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoA+'\0',
-        "0 "+'RENDERER*FRONT_LAYER*TREE*TREE*$LOGO_2*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoB+'\0',
+    key : () => [
+      `0 RENDERER*FRONT_LAYER*STAGE*DIRECTOR*$ura_in START\0`,
+      `0 RENDERER*FRONT_LAYER*TREE*$ura*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*FRONT_LAYER*STAGE*DIRECTOR*$ura_in SHOW END\0`,
+      `0 RENDERER*FRONT_LAYER*TREE*$ura*KEY*DRAW_KEY SET 0\0`
+    ],
 
-        `0 RENDERER*FRONT_LAYER*TREE*$Clock*GEOM*TEXT SET ${time}\0`,
+    main2 : (teamAbrA, teamAbrB, quarter, scoreA, scoreB, logoA, logoB, timeouts = {A: 0, B: 0}, fouls = {A: 0, B: 0} ) => {
+      return [ 
+        "0 "+'RENDERER*FRONT_LAYER*TREE*$LOGO_1*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoA+'\0',
+        "0 "+'RENDERER*FRONT_LAYER*TREE*$LOGO_2*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoB+'\0',
+
         `0 RENDERER*FRONT_LAYER*TREE*$ura_ekipa1*GEOM*TEXT SET ${teamAbrA}\0`,
         `0 RENDERER*FRONT_LAYER*TREE*$ura_ekipa2*GEOM*TEXT SET ${teamAbrB}\0`,
-        (quarter != 5 ?`0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET Q${quarter}\0` :`0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET OT\0` ),
-        `0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET Q${quarter}\0`,
+        (quarter < 5 ? `0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET Q${quarter}\0` : `0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET OT\0` ),
+        `0 RENDERER*FRONT_LAYER*TREE*$ura_rezultat_ekipa1*GEOM*TEXT SET ${scoreA}\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$ura_rezultat_ekipa2*GEOM*TEXT SET ${scoreB}\0`,
+
+        `0 RENDERER*FRONT_LAYER*TREE*$t1_1*ACTIVE SET ${ (timeouts.A > 0)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$t1_2*ACTIVE SET ${ (timeouts.A > 1)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$t1_3*ACTIVE SET ${ (timeouts.A > 2)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$t2_1*ACTIVE SET ${ (timeouts.B > 0)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$t2_2*ACTIVE SET ${ (timeouts.B > 1)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$t2_3*ACTIVE SET ${ (timeouts.B > 2)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$L1*ACTIVE SET ${ (fouls.A > 0)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$L2*ACTIVE SET ${ (fouls.A > 1)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$L3*ACTIVE SET ${ (fouls.A > 2)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$L4*ACTIVE SET ${ (fouls.A > 3)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$L5*ACTIVE SET ${ (fouls.A > 4)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$D1*ACTIVE SET ${ (fouls.B > 0)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$D2*ACTIVE SET ${ (fouls.B > 1)? 'ON': 'OFF' }\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$D3*ACTIVE SET ${ (fouls.B > 2)? 'ON': 'OFF' }\0`,
+    ]},
+    main : (time, attack, teamAbrA, teamAbrB, quarter, scoreA, scoreB, logoA, logoB, timeouts = {A: 0, B: 0}, fouls = {A: 0, B: 0} ) => {
+      return [ 
+        "0 "+'RENDERER*FRONT_LAYER*TREE*$LOGO_1*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoA+'\0',
+        "0 "+'RENDERER*FRONT_LAYER*TREE*$LOGO_2*IMAGE SET IMAGE*' + project + '/FLAGS_CLOCK/'+logoB+'\0',
+
+        `0 RENDERER*FRONT_LAYER*TREE*$Clock*GEOM*TEXT SET ${time}\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$Shotclock*GEOM*TEXT SET ${attack}\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$ura_ekipa1*GEOM*TEXT SET ${teamAbrA}\0`,
+        `0 RENDERER*FRONT_LAYER*TREE*$ura_ekipa2*GEOM*TEXT SET ${teamAbrB}\0`,
+        (quarter < 5 ?`0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET Q${quarter}\0` :`0 RENDERER*FRONT_LAYER*TREE*$q*GEOM*TEXT SET OT\0` ),
         `0 RENDERER*FRONT_LAYER*TREE*$ura_rezultat_ekipa1*GEOM*TEXT SET ${scoreA}\0`,
         `0 RENDERER*FRONT_LAYER*TREE*$ura_rezultat_ekipa2*GEOM*TEXT SET ${scoreB}\0`,
 
@@ -557,46 +656,151 @@ const tcpStringsList = {
     out : () => ['0 RENDERER*FRONT_LAYER*STAGE*DIRECTOR*$ura_out START\0']
   },
   standings : {
-    in : () => [
+    in : (title) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/lestvica\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$lestvica_in START\0`
+        `0 RENDERER*TREE*$naslov_lestvica*GEOM*TEXT SET ${title} \0`
     ],
-    main : ( data, title ) =>  
-    data.map((row, iter) => {
-      if (iter > 0) {
-        try {
-          return  `0 RENDERER*TREE*$naslov_lestvica*GEOM*TEXT SET ${title} \0`+
-                  `0 RENDERER*TREE*$m${iter}*GEOM*TEXT SET ${iter}\0`+
-                  `0 RENDERER*TREE*$ekipa_lestvica${iter}*GEOM*TEXT SET ${row[0].value}\0`+
-                  `0 RENDERER*TREE*$p${iter}*GEOM*TEXT SET ${row[1].value}\0`+
-                  `0 RENDERER*TREE*$w${iter}*GEOM*TEXT SET ${row[2].value}\0`+
-                  `0 RENDERER*TREE*$l${iter}*GEOM*TEXT SET ${row[3].value}\0`+
-                  `0 RENDERER*TREE*$d${iter}*GEOM*TEXT SET ${row[4].value}\0`+
-                  `0 RENDERER*TREE*$pike${iter}*GEOM*TEXT SET ${row[5].value}\0`
-        } catch {
-          return `0 RENDERER*TREE*$naslov_lestvica*GEOM*TEXT SET ${title} \0`
-        }
-      }}),
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$lestvica_in START\0`,
+      `0 RENDERER*TREE*$lestvica*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$lestvica_in SHOW END\0`,
+      `0 RENDERER*TREE*$lestvica*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( data ) => [
+          `0 RENDERER*TREE*$m1*GEOM*TEXT SET 1\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica1*GEOM*TEXT SET ${data[0][0].value}\0`,
+          `0 RENDERER*TREE*$p1*GEOM*TEXT SET ${data[0][1].value}\0`,
+          `0 RENDERER*TREE*$w1*GEOM*TEXT SET ${data[0][2].value}\0`,
+          `0 RENDERER*TREE*$l1*GEOM*TEXT SET ${data[0][3].value}\0`,
+          `0 RENDERER*TREE*$d1*GEOM*TEXT SET ${data[0][4].value}\0`,
+          `0 RENDERER*TREE*$pike1*GEOM*TEXT SET ${data[0][5].value}\0`,
+
+          `0 RENDERER*TREE*$m2*GEOM*TEXT SET 2\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica2*GEOM*TEXT SET ${data[1][0].value}\0`,
+          `0 RENDERER*TREE*$p2*GEOM*TEXT SET ${data[1][1].value}\0`,
+          `0 RENDERER*TREE*$w2*GEOM*TEXT SET ${data[1][2].value}\0`,
+          `0 RENDERER*TREE*$l2*GEOM*TEXT SET ${data[1][3].value}\0`,
+          `0 RENDERER*TREE*$d2*GEOM*TEXT SET ${data[1][4].value}\0`,
+          `0 RENDERER*TREE*$pike2*GEOM*TEXT SET ${data[1][5].value}\0`,
+
+          `0 RENDERER*TREE*$m3*GEOM*TEXT SET 3\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica3*GEOM*TEXT SET ${data[2][0].value}\0`,
+          `0 RENDERER*TREE*$p3*GEOM*TEXT SET ${data[2][1].value}\0`,
+          `0 RENDERER*TREE*$w3*GEOM*TEXT SET ${data[2][2].value}\0`,
+          `0 RENDERER*TREE*$l3*GEOM*TEXT SET ${data[2][3].value}\0`,
+          `0 RENDERER*TREE*$d3*GEOM*TEXT SET ${data[2][4].value}\0`,
+          `0 RENDERER*TREE*$pike3*GEOM*TEXT SET ${data[2][5].value}\0`,
+
+          `0 RENDERER*TREE*$m4*GEOM*TEXT SET 4\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica4*GEOM*TEXT SET ${data[3][0].value}\0`,
+          `0 RENDERER*TREE*$p4*GEOM*TEXT SET ${data[3][1].value}\0`,
+          `0 RENDERER*TREE*$w4*GEOM*TEXT SET ${data[3][2].value}\0`,
+          `0 RENDERER*TREE*$l4*GEOM*TEXT SET ${data[3][3].value}\0`,
+          `0 RENDERER*TREE*$d4*GEOM*TEXT SET ${data[3][4].value}\0`,
+          `0 RENDERER*TREE*$pike4*GEOM*TEXT SET ${data[3][5].value}\0`,
+
+          `0 RENDERER*TREE*$m5*GEOM*TEXT SET 5\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica5*GEOM*TEXT SET ${data[4][0].value}\0`,
+          `0 RENDERER*TREE*$p5*GEOM*TEXT SET ${data[4][1].value}\0`,
+          `0 RENDERER*TREE*$w5*GEOM*TEXT SET ${data[4][2].value}\0`,
+          `0 RENDERER*TREE*$l5*GEOM*TEXT SET ${data[4][3].value}\0`,
+          `0 RENDERER*TREE*$d5*GEOM*TEXT SET ${data[4][4].value}\0`,
+          `0 RENDERER*TREE*$pike5*GEOM*TEXT SET ${data[4][5].value}\0`,
+
+          `0 RENDERER*TREE*$m6*GEOM*TEXT SET 6\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica6*GEOM*TEXT SET ${data[5][0].value}\0`,
+          `0 RENDERER*TREE*$p6*GEOM*TEXT SET ${data[5][1].value}\0`,
+          `0 RENDERER*TREE*$w6*GEOM*TEXT SET ${data[5][2].value}\0`,
+          `0 RENDERER*TREE*$l6*GEOM*TEXT SET ${data[5][3].value}\0`,
+          `0 RENDERER*TREE*$d6*GEOM*TEXT SET ${data[5][4].value}\0`,
+          `0 RENDERER*TREE*$pike6*GEOM*TEXT SET ${data[5][5].value}\0`,
+
+          `0 RENDERER*TREE*$m7*GEOM*TEXT SET 7\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica7*GEOM*TEXT SET ${data[6][0].value}\0`,
+          `0 RENDERER*TREE*$p7*GEOM*TEXT SET ${data[6][1].value}\0`,
+          `0 RENDERER*TREE*$w7*GEOM*TEXT SET ${data[6][2].value}\0`,
+          `0 RENDERER*TREE*$l7*GEOM*TEXT SET ${data[6][3].value}\0`,
+          `0 RENDERER*TREE*$d7*GEOM*TEXT SET ${data[6][4].value}\0`,
+          `0 RENDERER*TREE*$pike7*GEOM*TEXT SET ${data[6][5].value}\0`,
+
+          `0 RENDERER*TREE*$m8*GEOM*TEXT SET 8\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica8*GEOM*TEXT SET ${data[7][0].value}\0`,
+          `0 RENDERER*TREE*$p8*GEOM*TEXT SET ${data[7][1].value}\0`,
+          `0 RENDERER*TREE*$w8*GEOM*TEXT SET ${data[7][2].value}\0`,
+          `0 RENDERER*TREE*$l8*GEOM*TEXT SET ${data[7][3].value}\0`,
+          `0 RENDERER*TREE*$d8*GEOM*TEXT SET ${data[7][4].value}\0`,
+          `0 RENDERER*TREE*$pike8*GEOM*TEXT SET ${data[7][5].value}\0`,
+
+          `0 RENDERER*TREE*$m9*GEOM*TEXT SET 9\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica9*GEOM*TEXT SET ${data[8][0].value}\0`,
+          `0 RENDERER*TREE*$p9*GEOM*TEXT SET ${data[8][1].value}\0`,
+          `0 RENDERER*TREE*$w9*GEOM*TEXT SET ${data[8][2].value}\0`,
+          `0 RENDERER*TREE*$l9*GEOM*TEXT SET ${data[8][3].value}\0`,
+          `0 RENDERER*TREE*$d9*GEOM*TEXT SET ${data[8][4].value}\0`,
+          `0 RENDERER*TREE*$pike9*GEOM*TEXT SET ${data[8][5].value}\0`,
+
+          `0 RENDERER*TREE*$m10*GEOM*TEXT SET 10\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica10*GEOM*TEXT SET ${data[9][0].value}\0`,
+          `0 RENDERER*TREE*$p10*GEOM*TEXT SET ${data[9][1].value}\0`,
+          `0 RENDERER*TREE*$w10*GEOM*TEXT SET ${data[9][2].value}\0`,
+          `0 RENDERER*TREE*$l10*GEOM*TEXT SET ${data[9][3].value}\0`,
+          `0 RENDERER*TREE*$d10*GEOM*TEXT SET ${data[9][4].value}\0`,
+          `0 RENDERER*TREE*$pike10*GEOM*TEXT SET ${data[9][5].value}\0`,
+
+          `0 RENDERER*TREE*$m11*GEOM*TEXT SET 11\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica11*GEOM*TEXT SET ${data[10][0].value}\0`,
+          `0 RENDERER*TREE*$p11*GEOM*TEXT SET ${data[10][1].value}\0`,
+          `0 RENDERER*TREE*$w11*GEOM*TEXT SET ${data[10][2].value}\0`,
+          `0 RENDERER*TREE*$l11*GEOM*TEXT SET ${data[10][3].value}\0`,
+          `0 RENDERER*TREE*$d11*GEOM*TEXT SET ${data[10][4].value}\0`,
+          `0 RENDERER*TREE*$pike11*GEOM*TEXT SET ${data[10][5].value}\0`,
+
+          `0 RENDERER*TREE*$m12*GEOM*TEXT SET 12\0`,
+          `0 RENDERER*TREE*$ekipa_lestvica12*GEOM*TEXT SET ${data[11][0].value}\0`,
+          `0 RENDERER*TREE*$p12*GEOM*TEXT SET ${data[11][1].value}\0`,
+          `0 RENDERER*TREE*$w12*GEOM*TEXT SET ${data[11][2].value}\0`,
+          `0 RENDERER*TREE*$l12*GEOM*TEXT SET ${data[11][3].value}\0`,
+          `0 RENDERER*TREE*$d12*GEOM*TEXT SET ${data[11][4].value}\0`,
+          `0 RENDERER*TREE*$pike12*GEOM*TEXT SET ${data[11][5].value}\0`
+        ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$lestvica_out START\0'      
   },
   fixtures : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/pari\0`,
-        `0 RENDERER*STAGE*DIRECTOR*$pari_in START\0`,
+    in : (title) => [
+      `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/pari\0`,
+      `0 RENDERER*TREE*$Fixtures*GEOM*TEXT SET ${title}\0`
+
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$pari_in START\0`,
+      `0 RENDERER*TREE*$Pari*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$pari_in SHOW END\0`,
+      `0 RENDERER*TREE*$Pari*KEY*DRAW_KEY SET 0\0`
     ],
     main : ( data ) =>  
-      data.map((row, iter) => 
-        `0 RENDERER*TREE*$${iter}*GEOM*TEXT SET ${row[0].value}\0`+
-        `0 RENDERER*TREE*$par${iter}*GEOM*TEXT SET ${row[1].value}\0`+
-        `0 RENDERER*TREE*$Datum_${iter}*GEOM*TEXT SET ${row[2].value}\0`
-      )
+      data.map((row, iter) => {
+        return (
+          `0 RENDERER*TREE*$${iter+1}*GEOM*TEXT SET ${row[0].value}\0`+
+          `0 RENDERER*TREE*$par${iter+1}*GEOM*TEXT SET ${row[1].value} - ${row[2].value}\0`+
+          `0 RENDERER*TREE*$Datum_${iter+1}*GEOM*TEXT SET ${row[3].value}\0`
+        )
+      })
     ,
     out : () => '0 RENDERER*STAGE*DIRECTOR*$pari_out START\0',      
   },
   quarter_1 : {
-    in : () => [
-        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/RESULT_Q1\0`,
+    in : (title, texts) => [
         `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q1_IN START\0`,
+        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/RESULT_Q1\0`,
+        `0 RENDERER*TREE*$fix*GEOM*TEXT SET ${title}\0`,
+        `0 RENDERER*TREE*$fix1*GEOM*TEXT SET ${texts}\0`,
+
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q1_IN START\0`,
+      `0 RENDERER*TREE*$RESULT_Q1*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q1_IN SHOW END\0`,
+      `0 RENDERER*TREE*$RESULT_Q1*KEY*DRAW_KEY SET 0\0`
     ],
     main : ( teamTitleA, teamTitleB, score, quarterScore ) => [ 
       `0 RENDERER*TREE*$ekipa1*GEOM*TEXT SET ${teamTitleA}\0`,
@@ -609,9 +813,18 @@ const tcpStringsList = {
     out : () => '0 RENDERER*STAGE*DIRECTOR*$RESULT_Q1_OUT START\0',      
   },
   quarter_2 : {
-    in : () => [
+    in : (title, texts) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/RESULT_Q2\0`,
         `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q2_IN START\0`,
+        `0 RENDERER*TREE*$fix*GEOM*TEXT SET ${title}\0`,
+        `0 RENDERER*TREE*$fix1*GEOM*TEXT SET ${texts[0]}\0`,
+        `0 RENDERER*TREE*$fix2*GEOM*TEXT SET ${texts[1]}\0`,
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q2_IN START\0`,
+      `0 RENDERER*TREE*$RESULT_Q2*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q2_IN SHOW END\0`,
+      `0 RENDERER*TREE*$RESULT_Q2*KEY*DRAW_KEY SET 0\0`
     ],
     main : ( teamTitleA, teamTitleB, score, quarterScore ) => [ 
       `0 RENDERER*TREE*$ekipa1*GEOM*TEXT SET ${teamTitleA}\0`,
@@ -626,9 +839,19 @@ const tcpStringsList = {
     out : () => '0 RENDERER*STAGE*DIRECTOR*$RESULT_Q2_OUT START\0',      
   },
   quarter_3 : {
-    in : () => [
+    in : (title, texts) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/RESULT_Q3\0`,
         `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q3_IN START\0`,
+        `0 RENDERER*TREE*$fix*GEOM*TEXT SET ${title}\0`,
+        `0 RENDERER*TREE*$fix1*GEOM*TEXT SET ${texts[0]}\0`,
+        `0 RENDERER*TREE*$fix2*GEOM*TEXT SET ${texts[1]}\0`,
+        `0 RENDERER*TREE*$fix3*GEOM*TEXT SET ${texts[2]}\0`,
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q3_IN START\0`,
+      `0 RENDERER*TREE*$RESULT_Q3*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q3_IN SHOW END\0`,
+      `0 RENDERER*TREE*$RESULT_Q3*KEY*DRAW_KEY SET 0\0`
     ],
     main : ( teamTitleA, teamTitleB, score, quarterScore ) => [ 
       `0 RENDERER*TREE*$ekipa1*GEOM*TEXT SET ${teamTitleA}\0`,
@@ -645,9 +868,20 @@ const tcpStringsList = {
     out : () => '0 RENDERER*STAGE*DIRECTOR*$RESULT_Q3_OUT START\0',      
   },
   quarter_4 : {
-    in : () => [
+    in : (title, texts) => [
         `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/RESULT_Q4\0`,
         `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q4_IN START\0`,
+        `0 RENDERER*TREE*$fix*GEOM*TEXT SET ${title}\0`,
+        `0 RENDERER*TREE*$fix1*GEOM*TEXT SET ${texts[0]}\0`,
+        `0 RENDERER*TREE*$fix2*GEOM*TEXT SET ${texts[1]}\0`,
+        `0 RENDERER*TREE*$fix3*GEOM*TEXT SET ${texts[2]}\0`,
+        `0 RENDERER*TREE*$fix4*GEOM*TEXT SET ${texts[3]}\0`,
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q4_IN START\0`,
+      `0 RENDERER*TREE*$RESULT_Q4*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$RESULT_Q4_IN SHOW END\0`,
+      `0 RENDERER*TREE*$RESULT_Q4*KEY*DRAW_KEY SET 0\0`
     ],
     main : ( teamTitleA, teamTitleB, score, quarterScore ) => [ 
       `0 RENDERER*TREE*$ekipa1*GEOM*TEXT SET ${teamTitleA}\0`,
@@ -664,6 +898,108 @@ const tcpStringsList = {
       `0 RENDERER*TREE*$4thd*GEOM*TEXT SET ${quarterScore[3].B}\0`,
     ],
     out : () => '0 RENDERER*STAGE*DIRECTOR*$RESULT_Q4_OUT START\0',      
+  },
+  timeout : {
+    in : () => [
+        `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/INFOLINE_TITLE_1\0`,
+        `0 RENDERER*STAGE*DIRECTOR*$INFOLINE_TITLE_1_IN START\0`,
+    ],
+    main : ( team ) => [ 
+      `0 RENDERER*TREE*$vrstica1*GEOM*TEXT SET ${team}\0`,
+      `0 RENDERER*TREE*$vrstica2*GEOM*TEXT SET TIMEOUT\0`,
+    ],
+    out : () => '0 RENDERER*STAGE*DIRECTOR*$INFOLINE_TITLE_1_OUT START\0',      
+  },
+  halfTime : {
+    in : (title) => [
+      `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/statistika_1\0`,
+      `0 RENDERER*TREE*$naslov*GEOM*TEXT SET ${title}\0`
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in START\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in SHOW END\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( teamA, teamB, statsA, statsB, texts ) =>  [
+      `0 RENDERER*TREE*$ekipa_stat_levo*GEOM*TEXT SET ${teamA}\0`,
+      `0 RENDERER*TREE*$ekipa_stat_desno*GEOM*TEXT SET ${teamB}\0`,
+
+      `0 RENDERER*TREE*$L1*GEOM*TEXT SET ${statsA[0]}\0`,
+      `0 RENDERER*TREE*$L2*GEOM*TEXT SET ${statsA[1]}\0`,
+      `0 RENDERER*TREE*$L3*GEOM*TEXT SET ${statsA[2]}\0`,
+      `0 RENDERER*TREE*$L4*GEOM*TEXT SET ${statsA[3]}\0`,
+      `0 RENDERER*TREE*$L5*GEOM*TEXT SET ${statsA[4]}\0`,
+      `0 RENDERER*TREE*$L6*GEOM*TEXT SET ${statsA[5]}\0`,
+      `0 RENDERER*TREE*$L7*GEOM*TEXT SET ${statsA[6]}\0`,
+      `0 RENDERER*TREE*$L8*GEOM*TEXT SET ${statsA[7]}\0`,
+
+      `0 RENDERER*TREE*$D1*GEOM*TEXT SET ${statsB[0]}\0`,
+      `0 RENDERER*TREE*$D2*GEOM*TEXT SET ${statsB[1]}\0`,
+      `0 RENDERER*TREE*$D3*GEOM*TEXT SET ${statsB[2]}\0`,
+      `0 RENDERER*TREE*$D4*GEOM*TEXT SET ${statsB[3]}\0`,
+      `0 RENDERER*TREE*$D5*GEOM*TEXT SET ${statsB[4]}\0`,
+      `0 RENDERER*TREE*$D6*GEOM*TEXT SET ${statsB[5]}\0`,
+      `0 RENDERER*TREE*$D7*GEOM*TEXT SET ${statsB[6]}\0`,
+      `0 RENDERER*TREE*$D8*GEOM*TEXT SET ${statsB[7]}\0`,
+
+      `0 RENDERER*TREE*$1*GEOM*TEXT SET ${texts[0]}\0`,
+      `0 RENDERER*TREE*$2*GEOM*TEXT SET ${texts[1]}\0`,
+      `0 RENDERER*TREE*$3*GEOM*TEXT SET ${texts[2]}\0`,
+      `0 RENDERER*TREE*$4*GEOM*TEXT SET ${texts[3]}\0`,
+      `0 RENDERER*TREE*$5*GEOM*TEXT SET ${texts[4]}\0`,
+      `0 RENDERER*TREE*$6*GEOM*TEXT SET ${texts[5]}\0`,
+      `0 RENDERER*TREE*$7*GEOM*TEXT SET ${texts[6]}\0`,
+      `0 RENDERER*TREE*$8*GEOM*TEXT SET ${texts[7]}\0`,
+    ]
+    ,
+    out : () => '0 RENDERER*STAGE*DIRECTOR*$statistika_out START\0',      
+  },
+  fullTime : {
+    in : (title) => [
+      `0 RENDERER SET_OBJECT SCENE*${project}/PLAYOUT/statistika_1\0`,
+      `0 RENDERER*TREE*$naslov*GEOM*TEXT SET ${title}\0`
+    ],
+    key : () => [
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in START\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 1\0`,
+      `0 RENDERER*STAGE*DIRECTOR*$statistika_in SHOW END\0`,
+      `0 RENDERER*TREE*$statistika*KEY*DRAW_KEY SET 0\0`,
+    ],
+    main : ( teamA, teamB, statsA, statsB, texts ) =>  [
+      `0 RENDERER*TREE*$ekipa_stat_levo*GEOM*TEXT SET ${teamA}\0`,
+      `0 RENDERER*TREE*$ekipa_stat_desno*GEOM*TEXT SET ${teamB}\0`,
+
+      `0 RENDERER*TREE*$L1*GEOM*TEXT SET ${statsA[0]}\0`,
+      `0 RENDERER*TREE*$L2*GEOM*TEXT SET ${statsA[1]}\0`,
+      `0 RENDERER*TREE*$L3*GEOM*TEXT SET ${statsA[2]}\0`,
+      `0 RENDERER*TREE*$L4*GEOM*TEXT SET ${statsA[3]}\0`,
+      `0 RENDERER*TREE*$L5*GEOM*TEXT SET ${statsA[4]}\0`,
+      `0 RENDERER*TREE*$L6*GEOM*TEXT SET ${statsA[5]}\0`,
+      `0 RENDERER*TREE*$L7*GEOM*TEXT SET ${statsA[6]}\0`,
+      `0 RENDERER*TREE*$L8*GEOM*TEXT SET ${statsA[7]}\0`,
+
+      `0 RENDERER*TREE*$D1*GEOM*TEXT SET ${statsB[0]}\0`,
+      `0 RENDERER*TREE*$D2*GEOM*TEXT SET ${statsB[1]}\0`,
+      `0 RENDERER*TREE*$D3*GEOM*TEXT SET ${statsB[2]}\0`,
+      `0 RENDERER*TREE*$D4*GEOM*TEXT SET ${statsB[3]}\0`,
+      `0 RENDERER*TREE*$D5*GEOM*TEXT SET ${statsB[4]}\0`,
+      `0 RENDERER*TREE*$D6*GEOM*TEXT SET ${statsB[5]}\0`,
+      `0 RENDERER*TREE*$D7*GEOM*TEXT SET ${statsB[6]}\0`,
+      `0 RENDERER*TREE*$D8*GEOM*TEXT SET ${statsB[7]}\0`,
+
+      `0 RENDERER*TREE*$1*GEOM*TEXT SET ${texts[0]}\0`,
+      `0 RENDERER*TREE*$2*GEOM*TEXT SET ${texts[1]}\0`,
+      `0 RENDERER*TREE*$3*GEOM*TEXT SET ${texts[2]}\0`,
+      `0 RENDERER*TREE*$4*GEOM*TEXT SET ${texts[3]}\0`,
+      `0 RENDERER*TREE*$5*GEOM*TEXT SET ${texts[4]}\0`,
+      `0 RENDERER*TREE*$6*GEOM*TEXT SET ${texts[5]}\0`,
+      `0 RENDERER*TREE*$7*GEOM*TEXT SET ${texts[6]}\0`,
+      `0 RENDERER*TREE*$8*GEOM*TEXT SET ${texts[7]}\0`,
+    ]
+      
+    ,
+    out : () => '0 RENDERER*STAGE*DIRECTOR*$statistika_out START\0',      
   },
 
 }
