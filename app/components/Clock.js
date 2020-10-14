@@ -6,18 +6,18 @@ import tcpStrings from '../tcpStrings.js'
 import {useSocket} from '../hooks/useSocket'
 
 const Container = styled.div`
-  flex:1;
+  flex: 1;
   display: flex;
   background-color: var(--backgroundColor);
   flex-direction: column;
 `
 const Buttons = styled.div`
-  flex:3;
+  flex: 3;
   display: flex;
   background-color: var(--backgroundColor);
 `
 const Display = styled.p`
-  flex:1;
+  flex: 1;
   text-align: center;
   background-color: var(--backgroundColor);
   color: var(--textColor);

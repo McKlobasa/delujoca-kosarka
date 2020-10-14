@@ -12,7 +12,7 @@ import { TeamName, LastRowContext } from '../context.js'
 
 const Container = styled.div`
   display: flex;
-  flex: 1
+  flex: 1;
   flex-direction: row;
   width: 100%;
   border: 1px solid var(--backgroundDarkerColor);
@@ -21,7 +21,7 @@ const Column = styled.div`
   flex: 8;
   display: flex;
   flex-direction: column;
-  align-context: stretch;
+  align-content: stretch;
   overflow-x: hidden;
 `
 const Title = styled.div`

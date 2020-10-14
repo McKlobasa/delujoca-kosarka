@@ -7,8 +7,8 @@ import useSpreadsheet from '../hooks/useSpreadsheet.js'
 const Button = styled.button`
   width: 100%;
   height: 30px;
-  background-color: var(--backgroundColor)
-  color: var(--textColor)
+  background-color: var(--backgroundColor);
+  color: var(--textColor);
   border: 1px var(--textColor) solid
 `
 const Container = styled.div`

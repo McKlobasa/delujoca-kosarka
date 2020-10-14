@@ -12,7 +12,7 @@ const StyledFoulsByQuarter = styled.div`
 const StyledQuarter = styled.div`
   flex:1;
   background-color: var(--backgroundColor);
-  margin 5px;
+  margin: 5px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.25);
   font-size: 2em;
   color: var(--textColor);
@@ -22,7 +22,7 @@ const StyledQuarter = styled.div`
 `
 const StyledTitle = styled.div`
   flex:1;
-  margin 5px;
+  margin: 5px;
   font-size: 2em;
   font-weight: bold;
   color: var(--textColor);
