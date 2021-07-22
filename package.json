@@ -285,7 +285,7 @@
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.9",
     "styled-components": "^4.2.0",
-    "xlsx": "^0.14.3"
+    "xlsx": "^0.17.0"
   },
   "devEngines": {
     "node": ">=7.x",
